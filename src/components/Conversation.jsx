@@ -1,6 +1,6 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Message from "./Message";
 import { ChatListContext } from "../providers/ChatListProvider";
 import useAxiosInstance from "../api/axiosInstance.js";
@@ -78,6 +78,7 @@ const MessageContainer = () => {
   const [conversationLoading, setConversationLoading] = useState(true);
   const { id } = useParams();
   const axiosInstance = useAxiosInstance();
+  const messageContainerRef = useRef();
 
   const retrieveConversation = async () => {
     try {
@@ -96,15 +97,28 @@ const MessageContainer = () => {
     if (socket == null) return;
 
     socket.on("new-message", (newMessage) => {
-      console.log({ newMessage });
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
     return () => socket.off("new-message");
   }, [socket]);
 
+  const scrollToBottom = () => {
+    messageContainerRef.current.scrollTo({
+      top: messageContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <div className=" h-full overflow-auto px-3 py-2 mb-24">
+    <div
+      className=" h-full overflow-auto px-3 py-2 mb-24"
+      ref={messageContainerRef}
+    >
       {conversationLoading ? (
         <div>Loading...</div>
       ) : (
