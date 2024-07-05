@@ -1,8 +1,10 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Message from "./Message";
 import { ChatListContext } from "../providers/ChatListProvider";
+import useAxiosInstance from "../api/axiosInstance.js";
+import { useParams } from "react-router-dom";
 
 const ConversationHeader = ({ selectedChat }) => {
   return (
@@ -17,7 +19,6 @@ const ConversationHeader = ({ selectedChat }) => {
 
 const ConversationFooter = () => {
   return (
-    // <div className="absolute bottom-0 right-0 w-full">
     <div className=" absolute w-full bottom-0  py-5 px-3">
       <div className="flex p-2 bg-white rounded-md">
         <input type="text" className="flex-1 px-3 outline-none" />
@@ -29,24 +30,49 @@ const ConversationFooter = () => {
   );
 };
 
-const MessageContainer = () => {
+const MessageContainer = ({ conversationLoading }) => {
   return (
     <div className=" h-full overflow-auto px-3 py-2 mb-24">
-      <Message text="Ha Opu" />
-      <Message text="Nasiv, ki obostha?" self={true} />
-      <Message text="Obostha valo na" />
+      {conversationLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <Message text="Ha Opu" />
+          <Message text="Nasiv, ki obostha?" self={true} />
+          <Message text="Obostha valo na" />
+        </>
+      )}
     </div>
   );
 };
 
 const Conversation = () => {
   const { selectedChat } = useContext(ChatListContext);
+  const [conversationLoading, setConversationLoading] = useState(true);
+  const axiosInstance = useAxiosInstance();
+  const { id } = useParams();
+  const [conversation, setConversation] = useState([]);
+
+  const retrieveConversation = async () => {
+    try {
+      const response = await axiosInstance.get(`/conversation/${id}`);
+      setConversation(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setConversationLoading(false);
+  };
+
+  useEffect(() => {
+    retrieveConversation();
+  }, []);
 
   return (
     <div className="flex flex-col relative h-full">
       <ConversationHeader selectedChat={selectedChat} />
 
-      <MessageContainer />
+      <MessageContainer conversationLoading={conversationLoading} />
 
       <ConversationFooter />
     </div>
