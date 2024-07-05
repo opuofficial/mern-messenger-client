@@ -72,14 +72,44 @@ const ConversationFooter = () => {
   );
 };
 
-const MessageContainer = ({ conversationLoading, conversation }) => {
+const MessageContainer = () => {
+  const { socket } = useContext(SocketContext);
+  const [messages, setMessages] = useState([]);
+  const [conversationLoading, setConversationLoading] = useState(true);
+  const { id } = useParams();
+  const axiosInstance = useAxiosInstance();
+
+  const retrieveConversation = async () => {
+    try {
+      const response = await axiosInstance.get(`/conversation/${id}`);
+
+      setMessages(response.data);
+      setConversationLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    retrieveConversation();
+
+    if (socket == null) return;
+
+    socket.on("new-message", (newMessage) => {
+      console.log({ newMessage });
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
+    return () => socket.off("new-message");
+  }, [socket]);
+
   return (
     <div className=" h-full overflow-auto px-3 py-2 mb-24">
       {conversationLoading ? (
         <div>Loading...</div>
       ) : (
         <>
-          {conversation.map((message) => (
+          {messages.map((message) => (
             <Message key={message._id} message={message} />
           ))}
         </>
@@ -90,37 +120,14 @@ const MessageContainer = ({ conversationLoading, conversation }) => {
 
 const Conversation = () => {
   const { selectedChat } = useContext(ChatListContext);
-  const [conversationLoading, setConversationLoading] = useState(true);
-  const axiosInstance = useAxiosInstance();
+
   const { id } = useParams();
-  const [conversation, setConversation] = useState([]);
-
-  const retrieveConversation = async () => {
-    try {
-      const response = await axiosInstance.get(`/conversation/${id}`);
-      console.log(response.data);
-      setConversation(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-
-    setConversationLoading(false);
-  };
-
-  console.log(conversation);
-
-  useEffect(() => {
-    retrieveConversation();
-  }, []);
 
   return (
     <div className="flex flex-col relative h-full">
       <ConversationHeader selectedChat={selectedChat} />
 
-      <MessageContainer
-        conversation={conversation}
-        conversationLoading={conversationLoading}
-      />
+      <MessageContainer />
 
       <ConversationFooter />
     </div>
