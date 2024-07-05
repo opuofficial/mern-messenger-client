@@ -12,7 +12,7 @@ const ChatList = () => {
     try {
       const chats = await axiosInstance.get("/chats");
 
-      setChatList(chats.data);
+      setChatList(chats.data || []);
       setChatListLoading(false);
     } catch (error) {
       console.log(error);
@@ -29,7 +29,7 @@ const ChatList = () => {
         <div>Loading...</div>
       ) : (
         <>
-          {chatList.map((person) => (
+          {chatList?.map((person) => (
             <ChatPerson key={person._id} person={person} />
           ))}
         </>

@@ -16,10 +16,6 @@ const ChatListProvider = ({ children }) => {
     setSelectedChat,
   };
 
-  useEffect(() => {
-    // console.log(chatList);
-  }, [chatList]);
-
   return (
     <ChatListContext.Provider value={values}>
       {children}
