@@ -17,7 +17,7 @@ const ChatListProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log(chatList);
+    // console.log(chatList);
   }, [chatList]);
 
   return (

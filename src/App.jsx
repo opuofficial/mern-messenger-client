@@ -5,16 +5,19 @@ import ModalProvider from "./providers/ModalProvider";
 import { Toaster } from "react-hot-toast";
 import AuthProvider from "./providers/AuthProvider";
 import ChatListProvider from "./providers/ChatListProvider";
+import SocketProvider from "./providers/SocketProvider";
 
 function App() {
   return (
     <>
       <AuthProvider>
-        <ChatListProvider>
-          <ModalProvider>
-            <RouterProvider router={router} />
-          </ModalProvider>
-        </ChatListProvider>
+        <SocketProvider>
+          <ChatListProvider>
+            <ModalProvider>
+              <RouterProvider router={router} />
+            </ModalProvider>
+          </ChatListProvider>
+        </SocketProvider>
       </AuthProvider>
       <Toaster />
     </>

@@ -56,6 +56,7 @@ const Conversation = () => {
   const retrieveConversation = async () => {
     try {
       const response = await axiosInstance.get(`/conversation/${id}`);
+      console.log(response.data);
       setConversation(response.data);
     } catch (error) {
       console.log(error);
