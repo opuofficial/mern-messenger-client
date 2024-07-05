@@ -1,25 +1,35 @@
+import { useContext, useMemo } from "react";
 import axios from "axios";
+import { AuthContext } from "../providers/AuthProvider";
 
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:3001",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  timeout: 10000,
-});
+const useAxiosInstance = () => {
+  const { user } = useContext(AuthContext);
 
-// axiosInstance.interceptors.request.use(
-//   config => {
+  const axiosInstance = useMemo(() => {
+    const instance = axios.create({
+      baseURL: "http://localhost:3001",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    });
 
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       config.headers['Authorization'] = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   error => {
-//     return Promise.reject(error);
-//   }
-// );
+    if (user) {
+      instance.interceptors.request.use(
+        (config) => {
+          config.headers["Authorization"] = `Bearer ${user.token}`;
+          return config;
+        },
+        (error) => {
+          return Promise.reject(error);
+        }
+      );
+    }
 
-export default axiosInstance;
+    return instance;
+  }, [user]);
+
+  return axiosInstance;
+};
+
+export default useAxiosInstance;

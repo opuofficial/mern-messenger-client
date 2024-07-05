@@ -1,25 +1,23 @@
 import React, { useContext, useState } from "react";
 import AuthForm from "../components/AuthForm";
 import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from "../api/axiosInstance";
+import useAxiosInstance from "../api/axiosInstance";
 import { setDataToLocalstorage } from "../utils/localStorage";
 import { AuthContext } from "../providers/AuthProvider";
 
 const Signin = () => {
   const [errorFromServer, setErrorFromServer] = useState(null);
   const navigate = useNavigate();
+  const axiosInstance = useAxiosInstance();
   const { setUser } = useContext(AuthContext);
 
   const getAuthCredentials = async ({ username, password }) => {
-    console.log("Signin", { username, password });
-
     try {
       const response = await axiosInstance.post("/user/signin", {
         username,
         password,
       });
 
-      console.log(response);
       if (response.status == 200) {
         setDataToLocalstorage(response.data);
         setUser(response.data);

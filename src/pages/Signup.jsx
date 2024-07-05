@@ -1,23 +1,21 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
-import axiosInstance from "../api/axiosInstance";
+import useAxiosInstance from "../api/axiosInstance";
 import toast from "react-hot-toast";
 
 const Signup = () => {
   const [errorFromServer, setErrorFromServer] = useState(null);
   const navigate = useNavigate();
+  const axiosInstance = useAxiosInstance();
 
   const getAuthCredentials = async ({ username, password }) => {
-    console.log("Signup ", { username, password });
-
     try {
       const response = await axiosInstance.post("/user/signup", {
         username,
         password,
       });
 
-      console.log(response);
       if (response.status == 201) {
         toast.success(response.data.message);
         navigate("/auth/signin");

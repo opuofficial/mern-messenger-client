@@ -6,7 +6,7 @@ const ChatPerson = ({ person }) => {
   return (
     <div className="chat-list-item py-5 flex items-center gap-5 text-xl cursor-pointer border-b font-semibold">
       <FontAwesomeIcon icon={faUser} />
-      <span>{person}</span>
+      <span>{person.username}</span>
     </div>
   );
 };
