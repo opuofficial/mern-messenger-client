@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
 import Signup from "../pages/Signup";
 import Signin from "../pages/Signin";
@@ -8,6 +8,10 @@ import Conversation from "../components/Conversation";
 import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    loader: () => redirect("/messages"),
+  },
   {
     path: "/auth",
     element: <AuthLayout />,
