@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../providers/AuthProvider";
 
-const Message = ({ text, self }) => {
+const Message = ({ message }) => {
+  const { user } = useContext(AuthContext);
+  const { sender, text } = message;
+
   return (
-    <div className={`flex mb-2 ${self && "justify-end"}`}>
+    <div className={`flex mb-2 ${sender?._id == user?.id && "justify-end"}`}>
       <span
         className={`${
-          self ? "bg-blue-950 text-white" : "bg-white"
+          sender?._id == user?.id ? "bg-blue-950 text-white" : "bg-white"
         } p-3 rounded-md`}
       >
         {text}

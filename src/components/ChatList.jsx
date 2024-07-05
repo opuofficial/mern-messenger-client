@@ -11,6 +11,7 @@ const ChatList = () => {
   const retrieveChats = async () => {
     try {
       const chats = await axiosInstance.get("/chats");
+
       setChatList(chats.data);
       setChatListLoading(false);
     } catch (error) {
