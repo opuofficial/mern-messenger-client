@@ -5,11 +5,13 @@ const Message = ({ message }) => {
   const { user } = useContext(AuthContext);
   const { sender, text } = message;
 
+  // console.log({ message, user });
+
   return (
-    <div className={`flex mb-2 ${sender?._id == user?.id && "justify-end"}`}>
+    <div className={`flex mb-2 ${sender == user?.id && "justify-end"}`}>
       <span
         className={`${
-          sender?._id == user?.id ? "bg-blue-950 text-white" : "bg-white"
+          sender == user?.id ? "bg-blue-950 text-white" : "bg-white"
         } p-3 rounded-md`}
       >
         {text}
