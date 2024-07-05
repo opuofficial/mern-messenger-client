@@ -1,17 +1,24 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const ChatListContext = createContext();
 
 const ChatListProvider = ({ children }) => {
   const [chatList, setChatList] = useState([]);
-  const [chatListLoading, setChatListLoading] = useState(false);
+  const [chatListLoading, setChatListLoading] = useState(true);
+  const [selectedChat, setSelectedChat] = useState({});
 
   const values = {
     chatList,
     setChatList,
     chatListLoading,
     setChatListLoading,
+    selectedChat,
+    setSelectedChat,
   };
+
+  useEffect(() => {
+    console.log(chatList);
+  }, [chatList]);
 
   return (
     <ChatListContext.Provider value={values}>

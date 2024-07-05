@@ -1,14 +1,15 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useContext } from "react";
 import Message from "./Message";
+import { ChatListContext } from "../providers/ChatListProvider";
 
-const ConversationHeader = () => {
+const ConversationHeader = ({ selectedChat }) => {
   return (
     <div className="py-2 px-3">
       <div className="chat-list-item py-5 flex items-center gap-5 text-xl cursor-pointer border-b">
         <FontAwesomeIcon icon={faUser} />
-        <span>Nasiv</span>
+        <span>{selectedChat.username}</span>
       </div>
     </div>
   );
@@ -34,31 +35,16 @@ const MessageContainer = () => {
       <Message text="Ha Opu" />
       <Message text="Nasiv, ki obostha?" self={true} />
       <Message text="Obostha valo na" />
-      <Message text="Keno, ki hoise?" self={true} />
-      <Message text="Ha Opu" />
-      <Message text="Nasiv, ki obostha?" self={true} />
-      <Message text="Obostha valo na" />
-      <Message text="Keno, ki hoise?" self={true} />
-      <Message text="Ha Opu" />
-      <Message text="Nasiv, ki obostha?" self={true} />
-      <Message text="Obostha valo na" />
-      <Message text="Keno, ki hoise?" self={true} />
-      <Message text="Ha Opu" />
-      <Message text="Nasiv, ki obostha?" self={true} />
-      <Message text="Obostha valo na" />
-      <Message text="Keno, ki hoise?" self={true} />
-      <Message text="Ha Opu" />
-      <Message text="Nasiv, ki obostha?" self={true} />
-      <Message text="Obostha valo na" />
-      <Message text="Keno, ki hoise?" self={true} />
     </div>
   );
 };
 
 const Conversation = () => {
+  const { selectedChat } = useContext(ChatListContext);
+
   return (
     <div className="flex flex-col relative h-full">
-      <ConversationHeader />
+      <ConversationHeader selectedChat={selectedChat} />
 
       <MessageContainer />
 

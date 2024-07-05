@@ -1,14 +1,38 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import ChatPerson from "./ChatPerson";
+import { ChatListContext } from "../providers/ChatListProvider";
+import useAxiosInstance from "../api/axiosInstance";
 
 const ChatList = () => {
-  const chatList = ["Nasiv", "Asif", "Emon", "Dev", "Ananda"];
+  const { chatList, setChatList, chatListLoading, setChatListLoading } =
+    useContext(ChatListContext);
+  const axiosInstance = useAxiosInstance();
+
+  const retrieveChats = async () => {
+    try {
+      const chats = await axiosInstance.get("/chats");
+      setChatList(chats.data);
+      setChatListLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    retrieveChats();
+  }, []);
 
   return (
     <div className="chat-list mt-5">
-      {chatList.map((person) => (
-        <ChatPerson key={person} person={person} />
-      ))}
+      {chatListLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          {chatList.map((person) => (
+            <ChatPerson key={person._id} person={person} />
+          ))}
+        </>
+      )}
     </div>
   );
 };

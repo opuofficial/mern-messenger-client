@@ -4,12 +4,17 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { ModalContext } from "../providers/ModalProvider";
 import ChatPerson from "./ChatPerson";
 import useAxiosInstance from "../api/axiosInstance";
+import { useLocation } from "react-router-dom";
+import { ChatListContext } from "../providers/ChatListProvider";
 
 const SearchUserModal = () => {
   const { isOpen, setIsOpen } = useContext(ModalContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const axiosInstance = useAxiosInstance();
+  const location = useLocation();
+  const { chatList, setChatList, setSelectedChat } =
+    useContext(ChatListContext);
 
   const searchUser = async () => {
     try {
@@ -23,9 +28,25 @@ const SearchUserModal = () => {
     }
   };
 
+  const addToChatList = (person) => {
+    const chat = chatList.find((chat) => chat._id == person._id);
+
+    if (!chat) {
+      setChatList((list) => [person, ...list]);
+    }
+
+    setSelectedChat(person);
+  };
+
   useEffect(() => {
     searchUser();
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsOpen(false);
+    }
+  }, [location]);
 
   return (
     <>
@@ -55,7 +76,9 @@ const SearchUserModal = () => {
 
                 <div className="search-results mt-3">
                   {searchResults.map((person) => (
-                    <ChatPerson key={person._id} person={person} />
+                    <div onClick={() => addToChatList(person)} key={person._id}>
+                      <ChatPerson person={person} />
+                    </div>
                   ))}
                 </div>
               </div>
