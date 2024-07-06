@@ -6,6 +6,7 @@ import { ChatListContext } from "../providers/ChatListProvider";
 import useAxiosInstance from "../api/axiosInstance.js";
 import { useParams } from "react-router-dom";
 import { SocketContext } from "../providers/SocketProvider.jsx";
+import { AuthContext } from "../providers/AuthProvider.jsx";
 
 const ConversationHeader = () => {
   const { selectedChat, setSelectedChat } = useContext(ChatListContext);
@@ -79,6 +80,8 @@ const MessageContainer = () => {
   const { id } = useParams();
   const axiosInstance = useAxiosInstance();
   const messageContainerRef = useRef();
+  const { user } = useContext(AuthContext);
+  const { selectedChat, setSelectedChat } = useContext(ChatListContext);
 
   const retrieveConversation = async () => {
     try {
@@ -97,11 +100,16 @@ const MessageContainer = () => {
     if (socket == null) return;
 
     socket.on("new-message", (newMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      if (
+        newMessage.sender == user.id ||
+        newMessage.sender == selectedChat._id
+      ) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
     });
 
     return () => socket.off("new-message");
-  }, [socket, id]);
+  }, [socket, id, selectedChat]);
 
   const scrollToBottom = () => {
     messageContainerRef.current.scrollTo({
