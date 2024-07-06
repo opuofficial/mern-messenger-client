@@ -23,7 +23,7 @@ const ConversationHeader = () => {
 
   useEffect(() => {
     retrieveUserInfo();
-  }, []);
+  }, [id]);
 
   return (
     <div className="py-2 px-3">
@@ -101,7 +101,7 @@ const MessageContainer = () => {
     });
 
     return () => socket.off("new-message");
-  }, [socket]);
+  }, [socket, id]);
 
   const scrollToBottom = () => {
     messageContainerRef.current.scrollTo({

@@ -5,8 +5,6 @@ const Message = ({ message }) => {
   const { user } = useContext(AuthContext);
   const { sender, text } = message;
 
-  // console.log({ message, user });
-
   return (
     <div className={`flex mb-2 ${sender == user?.id && "justify-end"}`}>
       <span
