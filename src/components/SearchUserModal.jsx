@@ -76,7 +76,10 @@ const SearchUserModal = () => {
 
                 <div className="search-results mt-3">
                   {searchResults.map((person) => (
-                    <div onClick={() => addToChatList(person)} key={person._id}>
+                    <div
+                      onClick={() => addToChatList(person)}
+                      key={person?._id}
+                    >
                       <ChatPerson person={person} />
                     </div>
                   ))}

@@ -30,7 +30,7 @@ const ChatList = () => {
       ) : (
         <>
           {chatList?.map((person) => (
-            <ChatPerson key={person.user._id} person={person.user} />
+            <ChatPerson key={person._id} person={person} />
           ))}
         </>
       )}
