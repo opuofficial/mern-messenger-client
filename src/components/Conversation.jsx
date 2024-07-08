@@ -81,7 +81,8 @@ const MessageContainer = () => {
   const axiosInstance = useAxiosInstance();
   const messageContainerRef = useRef();
   const { user } = useContext(AuthContext);
-  const { selectedChat, setSelectedChat } = useContext(ChatListContext);
+  const { selectedChat, setSelectedChat, chatList, setChatList } =
+    useContext(ChatListContext);
 
   const retrieveConversation = async () => {
     try {
@@ -105,6 +106,27 @@ const MessageContainer = () => {
         newMessage.sender == selectedChat._id
       ) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
+      } else {
+        console.log("message from another person", newMessage); // newMessage.sender
+        console.log(chatList); //chatList._id
+
+        const chatExist = chatList.find(
+          (chat) => chat._id == newMessage.sender
+        );
+
+        if (!chatExist) {
+          setChatList((chats) => [
+            { _id: newMessage.sender, username: newMessage.username },
+            ...chats,
+          ]);
+        } else {
+          const chatIndex = chatList.findIndex(
+            (chat) => chat._id == newMessage.sender
+          );
+          const targetChat = chatList[chatIndex];
+          chatList.splice(chatIndex, 1);
+          setChatList((prev) => [targetChat, ...chatList]);
+        }
       }
     });
 
